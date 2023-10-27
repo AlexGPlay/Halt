@@ -1,0 +1,4 @@
+{
+  "presets": ["@babel/preset-env"],
+  "plugins": ["./halt/babel/jsx-plugin", "./halt/babel/jsx-syntax-parser"]
+}
