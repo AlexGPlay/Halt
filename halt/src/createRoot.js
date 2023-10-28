@@ -3,5 +3,11 @@ export default function createRoot(domNode) {
     render(element) {
       domNode.appendChild(element);
     },
+    unmount(element) {
+      domNode.removeChild(element);
+    },
+    rerender(element) {
+      domNode.replaceChild(element);
+    },
   };
 }

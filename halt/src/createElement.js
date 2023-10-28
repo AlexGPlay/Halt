@@ -1,8 +1,37 @@
+window.componentId = 0;
+window.renderKey = 0;
+window.components = {};
+
 export default function createElement(type, props = {}, children = []) {
   if (typeof type === "function") {
-    return type({ ...props, children });
+    return createFunctionComponent(type, props, children);
   }
 
+  return createDefaultElement(type, props, children);
+}
+
+function createFunctionComponent(type, props, children) {
+  const componentId = window.componentId;
+  window.components[componentId] = {
+    state: [],
+    callIndex: 0,
+    onStateChange: () => {
+      window.renderKey = componentId;
+      window.components[componentId].callIndex = 0;
+      const newComponent = type({ ...props, children });
+      window.components[componentId].components.replaceWith(newComponent);
+      window.components[componentId].components = newComponent;
+    },
+  };
+  window.renderKey = componentId;
+  const componentRender = type({ ...props, children });
+  window.components[componentId].components = componentRender;
+
+  window.componentId++;
+  return componentRender;
+}
+
+function createDefaultElement(type, props, children) {
   const element = document.createElement(type);
   Object.entries(props || {}).forEach(([key, value]) => {
     if (key.startsWith("on")) {
@@ -14,7 +43,7 @@ export default function createElement(type, props = {}, children = []) {
   });
 
   children.forEach((child) => {
-    if (typeof child === "string") {
+    if (!child.nodeType) {
       child = document.createTextNode(child);
     }
     element.appendChild(child);
