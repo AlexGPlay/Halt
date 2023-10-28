@@ -30,6 +30,7 @@ module.exports = function (babel) {
 
               if (t.isJSXExpressionContainer(value)) {
                 // If the attribute value is an expression container, handle it as an arrow function
+                // Modify the handling of JSXExpressionContainer here
                 return t.objectProperty(key, value.expression);
               } else {
                 // Otherwise, handle it as a regular value
@@ -45,7 +46,12 @@ module.exports = function (babel) {
         const children = path.node.children.map((child) => {
           if (t.isJSXElement(child) || t.isJSXExpressionContainer(child)) {
             // JSX element or expression container
-            return t.isJSXExpressionContainer(child) ? child.expression : child;
+            return t.isJSXExpressionContainer(child)
+              ? t.arrowFunctionExpression(
+                  [], // no parameters
+                  child.expression // the expression within the JSXExpressionContainer
+                )
+              : child;
           } else if (t.isJSXText(child) && child.value.trim() !== "") {
             // String child with non-whitespace content
             return t.stringLiteral(child.value);
