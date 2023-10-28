@@ -12,6 +12,7 @@ export default function createElement(type, props = {}, children = []) {
 
 function createFunctionComponent(type, props, children) {
   const componentId = window.componentId;
+  window.componentId++;
   window.components[componentId] = {
     state: [],
     callIndex: 0,
@@ -26,8 +27,6 @@ function createFunctionComponent(type, props, children) {
   window.renderKey = componentId;
   const componentRender = type({ ...props, children });
   window.components[componentId].components = componentRender;
-
-  window.componentId++;
   return componentRender;
 }
 
