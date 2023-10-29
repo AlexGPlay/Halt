@@ -20,7 +20,7 @@ function createFunctionComponent(type, props, children) {
       window.renderKey = componentId;
       window.components[componentId].callIndex = 0;
       const newComponent = type({ ...props, children });
-      window.components[componentId].components.replaceWith(newComponent);
+      window.components[componentId].components?.replaceWith(newComponent);
       window.components[componentId].components = newComponent;
     },
   };
@@ -42,6 +42,9 @@ function createDefaultElement(type, props, children) {
   });
 
   children.forEach((child) => {
+    if (child === null || child === undefined) {
+      return;
+    }
     if (!child.nodeType) {
       child = document.createTextNode(child);
     }
