@@ -13,7 +13,7 @@ The API is composed of a small subset of what React has, in this case the two mo
 To test it you can simply `git clone` it and install the dependencies.
 
 - So `git clone git@github.com:AlexGPlay/Halt.git`
-- Go into de folder and `npm install`
+- Go into the folder and `npm install`
 - `npm run dev` and enjoy it in `localhost:8080`
 
 The library itself is in `halt/src` and the example that is running on the webpack dev server is in `halt/example`.
