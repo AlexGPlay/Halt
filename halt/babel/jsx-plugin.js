@@ -44,19 +44,13 @@ module.exports = function (babel) {
 
         // Handle children, including text nodes
         const children = path.node.children.map((child) => {
-          if (t.isJSXElement(child) || t.isJSXExpressionContainer(child)) {
-            // JSX element or expression container
-            return t.isJSXExpressionContainer(child)
-              ? t.arrowFunctionExpression(
-                  [], // no parameters
-                  child.expression // the expression within the JSXExpressionContainer
-                )
-              : child;
+          if (t.isJSXElement(child)) {
+            return child;
+          } else if (t.isJSXExpressionContainer(child)) {
+            return child.expression; // Return the expression directly
           } else if (t.isJSXText(child) && child.value.trim() !== "") {
-            // String child with non-whitespace content
             return t.stringLiteral(child.value);
           }
-          // Return null for whitespace text nodes
           return null;
         });
 
