@@ -1,5 +1,3 @@
-window.stateData = {};
-
 export default function useState(defaultState) {
   const owner = window.renderKey;
   const callIndex = window.components[owner].callIndex;
@@ -10,8 +8,17 @@ export default function useState(defaultState) {
   }
 
   const setValue = (newValue) => {
-    window.components[owner].state[callIndex] = newValue;
-    window.components[owner].onStateChange();
+    queueMicrotask(() => {
+      if (typeof newValue === "function") {
+        window.components[owner].state[callIndex] = newValue(
+          window.components[owner].state[callIndex]
+        );
+        window.components[owner].onStateChange();
+      } else {
+        window.components[owner].state[callIndex] = newValue;
+        window.components[owner].onStateChange();
+      }
+    });
   };
 
   return [window.components[owner].state[callIndex], setValue];
